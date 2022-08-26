@@ -1,3 +1,3 @@
 # my_proxy_settings
 
-Working on my home vpn.
+proxy working network through my home vpn.
