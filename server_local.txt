@@ -1,3 +1,1 @@
-http=192.168.31.100:8888, fast-open=false, udp-relay=false, tag=quantex-local-http
-
-socks5=192.168.31.99:10800, username=andy, password=andy13, tag=quantex-local-socks
+socks5=192.168.31.99:10800, tag=quantex-local-socks
