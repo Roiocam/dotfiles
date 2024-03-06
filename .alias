@@ -1,0 +1,12 @@
+alias pf='kubectl port-forward'
+alias pods='kubectl get pods'
+alias logsf='kubectl logs -f'
+alias kapply="kubectl apply -f"
+alias du1='du -hd1'
+alias g-geto='git remote get-url origin'
+alias g-getu='git remote get-url upstream'
+alias g-addo='git remote add origin'
+alias g-addu='git remote add upstream'
+alias ptop='top -pid'
+alias findname='find . -name'
+alias weather="curl wttr.in/Shenzhen"
