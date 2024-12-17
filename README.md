@@ -70,3 +70,8 @@ plugins=(
 )
 
 ```
+
+
+## P10k
+
+https://stackoverflow.com/questions/61176257/customizing-powerleve10k-prompt
