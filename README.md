@@ -45,3 +45,28 @@ git config --global --unset http.proxy
 git config --global --unset http.https://domain.com.proxy
 
 ```
+
+## ZSH
+
+```
+plugins=(
+  colorize
+  copypath
+  copyfile
+  docker
+  docker-compose
+  extract
+  git
+  history
+  last-working-dir
+  macos
+  sudo
+  vi-mode
+  web-search
+  z
+  history-substring-search # git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
+  zsh-autosuggestions # git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+  zsh-syntax-highlighting # git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+)
+
+```
