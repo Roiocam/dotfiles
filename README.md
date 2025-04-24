@@ -75,3 +75,33 @@ plugins=(
 ## P10k
 
 https://stackoverflow.com/questions/61176257/customizing-powerleve10k-prompt
+
+
+## Rime settings
+
+1. Install Sq
+2. `git clone https://github.com/iDvel/rime-ice.git Rime --depth 1`
+3. mv ./Rime/** ~/Library/Rime
+
+
+```yaml
+  solarized_white:
+    name: Solarized White
+    author: "Roiocam <iroiocam@gmail.com>, based on Aben Solarized Rock scheme"
+    candidate_list_layout: linear
+    candidate_format: '%c %@'
+    corner_radius: 3
+    border_height: 1
+    border_width: 1
+    font_point: 15
+    label_font_point: 12
+    back_color: 0xffffff
+    border_color: 0xffffff
+    text_color: 0xeeeeeea
+    hilited_text_color: 0x98a12a
+    candidate_text_color: 0x969483
+    comment_text_color: 0xc098a12a
+    hilited_candidate_text_color: 0x8236d3
+    hilited_candidate_back_color: 0xeeeeee
+    hilited_comment_text_color: 0x362b00
+```
