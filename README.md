@@ -1,6 +1,4 @@
 # Roiocam's dotfiles
-proxy working network through my home vpn.
-
 
 - Obsidian
 - EasyDict
@@ -13,11 +11,13 @@ proxy working network through my home vpn.
 - Caesium Image Compressor
 - Zotreo
 - LocalSend
-- Iterm
+- ~~Iterm~~ WezTerm
 - Drawio
 - OmniGraffle
-- Zed
+- ~~Zed~~VSCode `with` Copilot with `Scala Metals`
 - The Unarchiver
+- AeroSpace
+- NeoVim
 
 ## Git Settings
 
@@ -306,7 +306,7 @@ run = "move-node-to-workspace N"
 [[on-window-detected]]
 if.app-id = 'com.apple.mail'
 run = "move-node-to-workspace N"
-
+w
 # 检测到浏览器时，切换到桌面 B
 [[on-window-detected]]
 if.app-id = 'org.mozilla.firefox'
@@ -323,3 +323,13 @@ if.app-id = 'com.jetbrains.intellij'
 run = "move-node-to-workspace O"
 
 ```
+
+## HomeLab Apps
+
+- Downloads: transmission,  qBittorrent
+- Books: Calibre-Web, TaleBook, Kavita
+- Notes: Obisidan, Outline, Joplin
+- Videos: alist, emby, infuse, plex, jellyfish
+- Photos: immich
+- Others: wireguard, vaultwarden, RSSHub
+
