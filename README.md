@@ -2,7 +2,7 @@
 
 - Obsidian
 - EasyDict
-- EchoPaste/Clipy/Maccy
+- ~~EchoPaste~~/~~Clipy~~/~~Maccy~~/Raycast Clickboard History
 - Rime + ice
 - ScreenNote
 - RunCat
@@ -17,7 +17,8 @@
 - ~~Zed~~VSCode `with` Copilot with `Scala Metals`
 - The Unarchiver
 - AeroSpace
-- NeoVim
+- NeoVim `with` Kickstart.nvim
+- Raycast
 
 ## Git Settings
 
