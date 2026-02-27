@@ -395,3 +395,10 @@ run = "move-node-to-workspace O"
 - Photos: immich
 - Others: wireguard, vaultwarden, RSSHub
 
+
+## Dev Env
+
+- Python with UV: https://docs.astral.sh/uv/getting-started/installation/ -> uv python install
+- Node with NVM: https://nodejs.org/zh-cn/download -> nvm install 20
+
+
