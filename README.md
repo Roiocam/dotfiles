@@ -11,7 +11,7 @@
 - Caesium Image Compressor
 - Zotreo
 - LocalSend
-- WezTerm
+- ~~WezTerm~~/ Kitty with TMUX
 - Drawio
 - OmniGraffle
 - VSCode `with` Copilot with `Scala Metals`
