@@ -1,0 +1,138 @@
+#!/bin/sh
+set -u
+
+usage() {
+	cat <<'EOF'
+Usage:
+  tmux-busy start [window_id]
+  tmux-busy stop [window_id]
+  tmux-busy status [window_id]
+  tmux-busy frame [window_id]
+  tmux-busy spinner
+  tmux-busy run [-t window_id] [--] command [args...]
+EOF
+}
+
+tmux_cmd() {
+	if [ -n "${TMUX_BUSY_SOCKET:-}" ]; then
+		tmux -L "$TMUX_BUSY_SOCKET" "$@"
+	else
+		tmux "$@"
+	fi
+}
+
+current_window() {
+	tmux_cmd display-message -p '#{window_id}'
+}
+
+target_or_current() {
+	if [ "${1:-}" ]; then
+		printf '%s\n' "$1"
+	else
+		current_window
+	fi
+}
+
+refresh_status() {
+	tmux_cmd refresh-client -S >/dev/null 2>&1 || true
+}
+
+spinner() {
+	case "$(($(date +%s) % 4))" in
+		0) printf '%s' '/ ' ;;
+		1) printf '%s' '- ' ;;
+		2) printf '%s' '\ ' ;;
+		*) printf '%s' '| ' ;;
+	esac
+}
+
+is_busy() {
+	target="$1"
+	value="$(tmux_cmd show-window-option -v -t "$target" @busy 2>/dev/null || true)"
+	[ "$value" = "1" ]
+}
+
+start_busy() {
+	target="$(target_or_current "${1:-}")"
+	tmux_cmd set-window-option -q -t "$target" @busy 1
+	refresh_status
+}
+
+stop_busy() {
+	target="$(target_or_current "${1:-}")"
+	tmux_cmd set-window-option -qu -t "$target" @busy
+	refresh_status
+}
+
+show_status() {
+	target="$(target_or_current "${1:-}")"
+	if is_busy "$target"; then
+		printf 'busy\n'
+	else
+		printf 'idle\n'
+	fi
+}
+
+show_frame() {
+	target="$(target_or_current "${1:-}")"
+	if is_busy "$target"; then
+		spinner
+	fi
+}
+
+run_busy() {
+	target=""
+	if [ "${1:-}" = "-t" ]; then
+		[ "${2:-}" ] || {
+			usage >&2
+			return 2
+		}
+		target="$2"
+		shift 2
+	fi
+
+	if [ "${1:-}" = "--" ]; then
+		shift
+	fi
+
+	[ "$#" -gt 0 ] || {
+		usage >&2
+		return 2
+	}
+
+	if [ -z "$target" ]; then
+		target="$(current_window)"
+	fi
+
+	start_busy "$target"
+	trap 'stop_busy "$target"' EXIT HUP INT TERM
+
+	"$@"
+	code="$?"
+
+	stop_busy "$target"
+	trap - EXIT HUP INT TERM
+	return "$code"
+}
+
+command="${1:-}"
+if [ "$#" -gt 0 ]; then
+	shift
+fi
+
+case "$command" in
+	start) start_busy "${1:-}" ;;
+	stop) stop_busy "${1:-}" ;;
+	status) show_status "${1:-}" ;;
+	frame) show_frame "${1:-}" ;;
+	spinner) spinner ;;
+	run) run_busy "$@" ;;
+	-h|--help|help|"")
+		usage
+		[ "$command" ] || exit 2
+		;;
+	*)
+		usage >&2
+		exit 2
+		;;
+esac

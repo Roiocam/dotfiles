@@ -7,6 +7,11 @@
 
 # Local credentials and private material
 *.local
+!.local/
+!.local/bin/
+.local/bin/*
+!.local/bin/tmux-busy
+!.local/bin/tmux-project
 *.secret
 *.secrets
 *.pem

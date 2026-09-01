@@ -1,6 +1,6 @@
 # OPENSPEC:START
 # OpenSpec shell completions configuration
-fpath=("/Users/jingchen/.oh-my-zsh/custom/completions" $fpath)
+fpath=("$HOME/.oh-my-zsh/custom/completions" $fpath)
 autoload -Uz compinit
 compinit
 # OPENSPEC:END
@@ -146,16 +146,16 @@ export NVM_DIR="$HOME/.nvm"
 
 
 # Added by Antigravity
-export PATH="/Users/jingchen/.antigravity/antigravity/bin:$PATH"
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 alias cc='exec -a cc claude --dangerously-skip-permissions '
 alias oc='exec -a oc opencode'
 alias gm='exec -a gm gemini'
-# export GITHUB_TOKEN=your-github-token
-#export SONAR_HOST_URL=http://10.94.78.30:32500/
+# export GITHUB_TOKEN=
+# export SONAR_HOST_URL=
 #export NODE_TLS_REJECT_UNAUTHORIZE=0
-# export SANDBOX_TOKEN=your-sandbox-token
-# export LINEAR_API_KEY=your-linear-api-key
-#eval "$(/Users/jingchen/.local/bin/mise activate zsh)"
+# export SANDBOX_TOKEN=
+# export LINEAR_API_KEY=
+#eval "$($HOME/.local/bin/mise activate zsh)"
 
 # Environment variable toggle (persistent via ~/.env_toggles.zsh)
 _TOGGLE_FILE="$HOME/.env_toggles.zsh"
@@ -185,7 +185,7 @@ alias cc='claude --dangerously-skip-permissions'
 alias cx='codex --dangerously-bypass-approvals-and-sandbox'
 alias cc-gh='source ~/runtime/claude/gh.sh'
 # bun completions
-[ -s "/Users/jingchen/.bun/_bun" ] && source "/Users/jingchen/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -194,16 +194,16 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # kubectl
 alias pods='kubectl get pods -l'
 alias pf='kubectl port-forward '
-MAVEN_HOME='/Users/jingchen/soft/maven'
+MAVEN_HOME="${MAVEN_HOME:-$HOME/soft/maven}"
 export PATH="$MAVEN_HOME/bin:$PATH"
 export JAVA_HOME=$(/usr/libexec/java_home -v 23)
 export PATH=$JAVA_HOME/bin:$PATH
 export MAVEN_OPTS="-Dstyle.color=always"
-export PATH=/Users/jingchen/.local/bin/:$PATH
+export PATH="$HOME/.local/bin/:$PATH"
 
 alias apenv='set -a && source .env && set +a .'
 
-export PATH=/Users/jingchen/IdeaProject/opensource/agents/flow-engine/modules/cli/target/native-image/:$PATH
+export PATH="$HOME/IdeaProject/opensource/agents/flow-engine/modules/cli/target/native-image/:$PATH"
 export GRAALVM_HOME=/Library/Java/JavaVirtualMachines/graalvm-jdk-25.0.3+9.1/Contents/Home
 
 
@@ -212,5 +212,20 @@ alias htest='ijhttp -L VERBOSE --private-env-file ~/runtime/tests/http-client.pr
 export PATH="/Library/TeX/texbin:$PATH"
 
 export NPM_REGISTRY_URL=https://artifactory.sbuxcf.net/artifactory/api/npm/sdlc-npm/
+[[ -f "$HOME/Downloads/starbucks-root.pem" ]] && export NODE_EXTRA_CA_CERTS="$HOME/Downloads/starbucks-root.pem"
+# export YUNXIAO_API_KEY=
 
-# export YUNXIAO_API_KEY=your-yunxiao-api-key
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<
+
+# kimi-code
+export PATH="$HOME/.kimi-code/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
+# QODER_DISPATCHER_PATH v1
+path=("$HOME/.qoder/entry" ${path:#"$HOME/.qoder/entry"})
+export PATH
+# END QODER_DISPATCHER_PATH v1

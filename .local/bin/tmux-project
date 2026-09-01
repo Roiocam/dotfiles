@@ -1,0 +1,187 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+unset NO_COLOR
+export COLORTERM="${COLORTERM:-truecolor}"
+export CLICOLOR="${CLICOLOR:-1}"
+
+tmux_cmd() {
+  if [[ -n "${TMUX_PROJECT_SOCKET:-}" ]]; then
+    tmux -L "$TMUX_PROJECT_SOCKET" "$@"
+  else
+    tmux "$@"
+  fi
+}
+
+project_names() {
+  printf '%s\n' agent my-agent syncer skill
+}
+
+project_cwd() {
+  local root="${DOTFILES_PROJECT_ROOT:-$HOME/IdeaProject}"
+  case "$1" in
+    agent) printf '%s\n' "$root/opensource/agents/agent-session" ;;
+    my-agent) printf '%s\n' "$root/opensource/jingchen/agent-session" ;;
+    syncer) printf '%s\n' "$root/starbucks/sdlc-cross-syncer" ;;
+    skill) printf '%s\n' "$root/opensource/agents/my-claude" ;;
+    *) return 1 ;;
+  esac
+}
+
+project_has_nvim_window() {
+  case "$1" in
+    agent|my-agent|syncer) return 0 ;;
+    skill) return 1 ;;
+    *) return 1 ;;
+  esac
+}
+
+is_project() {
+  project_cwd "$1" >/dev/null 2>&1
+}
+
+delete_target() {
+  local status="${1:-}"
+  local type="${2:-}"
+  local name="${3:-}"
+  local attached current
+
+  if [[ "$status" != "detached" || "$type" != "session" || -z "$name" ]]; then
+    return 0
+  fi
+
+  if is_project "$name" || ! tmux_cmd has-session -t "$name" 2>/dev/null; then
+    return 0
+  fi
+
+  current=$(current_session)
+  attached=$(tmux_cmd display-message -p -t "$name" '#{session_attached}' 2>/dev/null || printf '1')
+  if [[ "$name" == "$current" || "$attached" != "0" ]]; then
+    return 0
+  fi
+
+  tmux_cmd kill-session -t "$name"
+}
+
+current_session() {
+  if [[ -z "${TMUX:-}" || -n "${TMUX_PROJECT_SOCKET:-}" ]]; then
+    return
+  fi
+  tmux_cmd display-message -p '#S' 2>/dev/null || true
+}
+
+list_targets() {
+  local name cwd status current windows attached
+  current=$(current_session)
+
+  while IFS= read -r name; do
+    cwd=$(project_cwd "$name")
+    if tmux_cmd has-session -t "$name" 2>/dev/null; then
+      if [[ "$name" == "$current" ]]; then
+        status="current"
+      else
+        status="ready"
+      fi
+    else
+      status="new"
+    fi
+    printf '%s\t%s\t%s\t%s\n' "$status" "project" "$name" "$cwd"
+  done < <(project_names)
+
+  tmux_cmd list-sessions -F '#{session_name}	#{session_windows}	#{session_attached}' 2>/dev/null |
+    while IFS=$'\t' read -r name windows attached; do
+      if is_project "$name"; then
+        continue
+      fi
+
+      if [[ "$name" == "$current" ]]; then
+        status="current"
+      elif [[ "$attached" == "1" ]]; then
+        status="attached"
+      else
+        status="detached"
+      fi
+      printf '%s\t%s\t%s\t%s windows\n' "$status" "session" "$name" "$windows"
+    done
+}
+
+choose_project() {
+  if [[ $# -gt 0 && -n "${1:-}" ]]; then
+    printf '%s\n' "$1"
+    return
+  fi
+
+  if ! command -v fzf >/dev/null 2>&1; then
+    printf 'fzf is required for interactive project selection\n' >&2
+    return 1
+  fi
+
+  local choice script
+  script="${BASH_SOURCE[0]}"
+  choice=$(
+    list_targets |
+      fzf --delimiter='\t' --with-nth=1,2,3,4 \
+        --prompt='tmux target> ' \
+        --header=$'status  type  name  info\nEnter: switch/create  Ctrl-D: delete detached ad-hoc session' \
+        --bind "ctrl-d:execute-silent($script --delete-target {1} {2} {3})+reload($script --list)"
+  )
+  [[ -n "$choice" ]] || return 1
+  printf '%s\n' "$choice" | awk -F '\t' '{print $3}'
+}
+
+create_project_session() {
+  local name="$1"
+  local cwd main_pane right_pane
+  cwd=$(project_cwd "$name")
+
+  tmux_cmd new-session -d -s "$name" -c "$cwd" -n "cx" "zsh -lic 'cx; exec zsh -l'"
+  main_pane=$(tmux_cmd display-message -p -t "$name:1" '#{pane_id}')
+  right_pane=$(tmux_cmd split-window -h -P -F '#{pane_id}' -t "$main_pane" -c "$cwd")
+  tmux_cmd split-window -v -t "$right_pane" -c "$cwd"
+  tmux_cmd select-pane -t "$main_pane"
+
+  if project_has_nvim_window "$name"; then
+    tmux_cmd new-window -t "$name:" -n "nvim" -c "$cwd" "zsh -lic 'nvim; exec zsh -l'"
+  fi
+
+  tmux_cmd new-window -t "$name:" -n "shell" -c "$cwd" "zsh -l"
+  tmux_cmd select-window -t "$name:1"
+}
+
+switch_or_attach() {
+  local name="$1"
+  if [[ "${TMUX_PROJECT_NO_ATTACH:-}" == "1" ]]; then
+    printf '%s\n' "$name"
+    return
+  fi
+  if [[ -n "${TMUX:-}" ]]; then
+    tmux_cmd switch-client -t "$name"
+  else
+    tmux_cmd attach-session -t "$name"
+  fi
+}
+
+main() {
+  local name
+  if [[ "${1:-}" == "--list" ]]; then
+    list_targets
+    return
+  fi
+  if [[ "${1:-}" == "--delete-target" ]]; then
+    delete_target "${2:-}" "${3:-}" "${4:-}"
+    return
+  fi
+
+  name=$(choose_project "${1:-}")
+
+  if is_project "$name" && ! tmux_cmd has-session -t "$name" 2>/dev/null; then
+    create_project_session "$name"
+  elif ! tmux_cmd has-session -t "$name" 2>/dev/null; then
+    printf 'unknown tmux project/session: %s\n' "$name" >&2
+    return 1
+  fi
+
+  switch_or_attach "$name"
+}
+
+main "$@"

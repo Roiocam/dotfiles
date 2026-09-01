@@ -8,8 +8,12 @@
 - AeroSpace: `.config/aerospace/aerospace.toml`
 - tmux: `.tmux.conf`
 - sbt: `.sbt/repositories`, `.sbt/1.0/akka-commercial.sbt`
+- Shell: `.zshenv`, `.zprofile`, `.zshrc`, `.p10k.zsh`, `.bash_profile`, `.bashrc`, `.profile`
+- WezTerm project launchers: `.config/wezterm-projects/`
+- tmux helper scripts: `.local/bin/tmux-busy`, `.local/bin/tmux-project`
+- Scala/Coursier: `.config/couriser/repositories`
 
-Machine-specific Kitty sessions and sbt caches are intentionally excluded.
+Machine-specific Kitty sessions and sbt caches are intentionally excluded. Shell credential values are replaced with empty templates; project paths default to `$HOME/IdeaProject` and can be overridden with `DOTFILES_PROJECT_ROOT`.
 
 - Obsidian
 - EasyDict
@@ -411,4 +415,3 @@ run = "move-node-to-workspace O"
 
 - Python with UV: https://docs.astral.sh/uv/getting-started/installation/ -> uv python install
 - Node with NVM: https://nodejs.org/zh-cn/download -> nvm install 20
-
