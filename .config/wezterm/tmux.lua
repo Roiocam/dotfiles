@@ -191,10 +191,35 @@ local function switch_or_start_project(window, pane, id)
 	end
 end
 
+local function project_launcher_action()
+	return wezterm.action_callback(function(window, pane)
+		local choices, _ = build_project_choices()
+
+		if #choices == 0 then
+			window:toast_notification("WezTerm", "No projects found in " .. projects_dir, nil, 3000)
+			return
+		end
+
+		window:perform_action(
+			act.InputSelector({
+				title = "Switch to Project",
+				choices = choices,
+				fuzzy = true,
+				action = wezterm.action_callback(function(inner_window, inner_pane, id, label)
+					if id then
+						switch_or_start_project(inner_window, inner_pane, id)
+					end
+				end),
+			}),
+			pane
+		)
+	end)
+end
+
 -- ============================================
 -- Keybinds
 -- ============================================
-M.leader = { key = "b", mods = "CTRL", timeout_milliseconds = 1000 }
+M.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1000 }
 
 M.keys = {
 	-- Tab operations
@@ -271,32 +296,8 @@ M.keys = {
 	},
 
 	-- Workspace / Project
-	{
-		key = "f",
-		mods = "LEADER",
-		action = wezterm.action_callback(function(window, pane) -- project launcher
-			local choices, _ = build_project_choices()
-
-			if #choices == 0 then
-				window:toast_notification("WezTerm", "No projects found in " .. projects_dir, nil, 3000)
-				return
-			end
-
-			window:perform_action(
-				act.InputSelector({
-					title = "Switch to Project",
-					choices = choices,
-					fuzzy = true,
-					action = wezterm.action_callback(function(inner_window, inner_pane, id, label)
-						if id then
-							switch_or_start_project(inner_window, inner_pane, id)
-						end
-					end),
-				}),
-				pane
-			)
-		end),
-	},
+	{ key = "f", mods = "LEADER", action = project_launcher_action() },
+	{ key = "f", mods = "LEADER|CTRL", action = project_launcher_action() },
 
 	-- Misc
 	{ key = "d", mods = "LEADER", action = act.QuitApplication }, -- detach (quit)

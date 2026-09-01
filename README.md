@@ -1,5 +1,16 @@
 # Roiocam's dotfiles
 
+## Included configurations
+
+- Kitty: `.config/kitty/kitty.conf`
+- WezTerm: `.config/wezterm/`
+- Neovim: `.config/nvim/`
+- AeroSpace: `.config/aerospace/aerospace.toml`
+- tmux: `.tmux.conf`
+- sbt: `.sbt/repositories`, `.sbt/1.0/akka-commercial.sbt`
+
+Machine-specific Kitty sessions and sbt caches are intentionally excluded.
+
 - Obsidian
 - EasyDict
 - ~~EchoPaste~~/~~Clipy~~/~~Maccy~~/Raycast Clickboard History
@@ -400,5 +411,4 @@ run = "move-node-to-workspace O"
 
 - Python with UV: https://docs.astral.sh/uv/getting-started/installation/ -> uv python install
 - Node with NVM: https://nodejs.org/zh-cn/download -> nvm install 20
-
 

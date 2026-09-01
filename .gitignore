@@ -1,0 +1,15 @@
+# Machine-specific and runtime state
+.config/kitty/sessions/
+.sbt/boot/
+.sbt/1.0/target/
+.sbt/1.0/plugins/target/
+.sbt/1.0/zinc/
+
+# Local credentials and private material
+*.local
+*.secret
+*.secrets
+*.pem
+*.key
+.sbt/**/credentials
+.sbt/**/credentials.*

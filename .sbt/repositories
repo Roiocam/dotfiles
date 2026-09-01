@@ -1,0 +1,5 @@
+[repositories]
+local
+aliyun: https://maven.aliyun.com/repository/public
+maven-central
+sdlc-maven: https://artifactory.sbuxcf.net/artifactory/sdlc-maven/

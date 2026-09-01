@@ -1,12 +1,9 @@
 return {
-  -- add gruvbox
-  { "ellisonleao/gruvbox.nvim" },
-
-  -- Configure LazyVim to load gruvbox
+  -- Configure LazyVim to load the local paper theme shared with WezTerm.
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "gruvbox",
+      colorscheme = "wezterm-paper",
     },
   },
 }

@@ -3,7 +3,7 @@
 -- Add any additional options here
 vim.g.lazyvim_blink_main = false
 vim.opt.spell = false
-vim.opt.background = "dark"
+vim.opt.background = "light"
 vim.opt.guicursor =
   "n-v-c-sm:block-blinkon300-blinkoff200,i-ci-ve:ver25-blinkon300-blinkoff200,r-cr-o:hor20-blinkon300-blinkoff200,t:block-blinkon300-blinkoff200"
 return {
